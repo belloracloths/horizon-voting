@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  blockchain:
+    build:
+      context: ./blockchain
+    ports:
+      - "8545:8545"
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./backend/.env
+    environment:
+      # Overrides value from .env so backend connects to Docker Postgres and Blockchain
+      - DATABASE_URL=postgresql://user:password@db:5432/voting_db
+      - RPC_URL=http://blockchain:8545
+    depends_on:
+      - db
+      - blockchain
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:3001
+      - NEXT_PUBLIC_RPC_URL=http://localhost:8545
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: voting_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge

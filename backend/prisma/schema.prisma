@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  Int          @id @default(autoincrement())
+  fullName            String
+  studentId           String       @unique
+  faculty             String
+  email               String       @unique
+  walletAddress       String?      @unique
+  encryptedPrivateKey String?
+  isVerified          Boolean      @default(false)
+  hasVoted            Boolean      @default(false) 
+  createdAt           DateTime     @default(now())
+
+  voteRecords         VoteRecord[]
+
+  @@index([faculty])
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String   
+  name      String
+  createdAt DateTime @default(now())
+}
+
+model Society {
+  id          Int        @id @default(autoincrement())
+  name        String   
+  description String?  
+  image       String?  
+  isCommon    Boolean    @default(true) 
+  facultyName String?  
+  createdAt   DateTime   @default(now())
+  
+  positions   Position[] 
+
+  @@index([isCommon, facultyName])
+}
+
+model Position {
+  id          Int          @id @default(autoincrement())
+  name        String      
+  societyId   Int          
+  society     Society      @relation(fields: [societyId], references: [id], onDelete: Cascade)
+  resultTime  DateTime?    
+  createdAt   DateTime     @default(now())
+
+  candidates  Candidate[] 
+  voteRecords VoteRecord[]
+
+  @@index([societyId])
+}
+
+model Candidate {
+  id          Int       @id @default(autoincrement())
+  name        String    
+  profilePic  String?   
+  batch       String    
+  faculty     String    
+  description String?   
+  
+  positionId  Int       
+  position    Position  @relation(fields: [positionId], references: [id], onDelete: Cascade)
+  
+  voteCount   Int       @default(0) 
+  createdAt   DateTime  @default(now())
+
+  @@index([positionId])
+}
+
+model VoteRecord {
+  id         Int      @id @default(autoincrement())
+  userId     Int      
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade) 
+  
+  positionId Int      
+  position   Position @relation(fields: [positionId], references: [id], onDelete: Cascade)
+  
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, positionId]) 
+  
+  @@index([userId])
+  @@index([positionId])
+}

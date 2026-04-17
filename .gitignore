@@ -1,0 +1,13 @@
+﻿node_modules/
+.env
+.env.*
+dist/
+build/
+.next/
+out/
+.DS_Store
+coverage/
+*.log
+blockchain/artifacts/
+blockchain/cache/
+blockchain/typechain-types/

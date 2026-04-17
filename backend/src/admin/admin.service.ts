@@ -1,0 +1,102 @@
+import { Injectable, UnauthorizedException, NotFoundException, Inject } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager'; 
+import { PrismaService } from '../prisma.service';
+import * as bcrypt from 'bcrypt';
+import * as jwt from 'jsonwebtoken';
+
+@Injectable()
+export class AdminService {
+  constructor(
+    private prisma: PrismaService,
+    @Inject(CACHE_MANAGER) private cacheManager: any 
+  ) {}
+
+  // --- ADMIN LOGIN ---
+  async login(email: string, pass: string) {
+    const admin = await this.prisma.admin.findUnique({ where: { email } });
+    if (!admin) throw new UnauthorizedException('Invalid Admin Credentials');
+
+    const isMatch = await bcrypt.compare(pass, admin.password);
+    if (!isMatch) throw new UnauthorizedException('Invalid Admin Credentials');
+
+    const token = jwt.sign(
+      { adminId: admin.id, role: 'admin' },
+      process.env.JWT_SECRET || 'secret_key',
+      { expiresIn: '24h' }
+    );
+    return { message: 'Admin Login Successful', token, name: admin.name };
+  }
+
+  // --- SOCIETIES ---
+  async createSociety(data: any) {
+    const res = await this.prisma.society.create({ data });
+    await this.cacheManager.clear(); 
+    return res;
+  }
+
+  async getSocieties() {
+    return this.prisma.society.findMany({ orderBy: { createdAt: 'desc' } });
+  }
+
+  async updateSociety(id: number, data: any) {
+    const res = await this.prisma.society.update({ where: { id }, data });
+    await this.cacheManager.clear(); 
+    return res;
+  }
+
+  async deleteSociety(id: number) {
+    const res = await this.prisma.society.delete({ where: { id } });
+    await this.cacheManager.clear(); 
+    return res;
+  }
+
+  // --- POSITIONS ---
+  async createPosition(data: any) {
+    const res = await this.prisma.position.create({ data });
+    await this.cacheManager.clear();
+    return res;
+  }
+
+  async getPositions(societyId: number) {
+    return this.prisma.position.findMany({
+      where: { societyId },
+      include: { candidates: true } 
+    });
+  }
+
+  async updatePosition(id: number, data: any) {
+    const res = await this.prisma.position.update({ where: { id }, data });
+    await this.cacheManager.clear();
+    return res;
+  }
+
+  async deletePosition(id: number) {
+    const res = await this.prisma.position.delete({ where: { id } });
+    await this.cacheManager.clear();
+    return res;
+  }
+
+  // --- CANDIDATES ---
+  async createCandidate(data: any) {
+    const res = await this.prisma.candidate.create({ data });
+    await this.cacheManager.clear();
+    return res;
+  }
+
+  async getCandidates(positionId: number) {
+    return this.prisma.candidate.findMany({ where: { positionId } });
+  }
+
+  async updateCandidate(id: number, data: any) {
+    const res = await this.prisma.candidate.update({ where: { id }, data });
+    await this.cacheManager.clear();
+    return res;
+  }
+
+  async deleteCandidate(id: number) {
+    const res = await this.prisma.candidate.delete({ where: { id } });
+    await this.cacheManager.clear();
+    return res;
+  }
+}

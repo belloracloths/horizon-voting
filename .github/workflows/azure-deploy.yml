@@ -1,0 +1,35 @@
+name: Deploy to Azure Web Apps
+
+on:
+  push:
+    branches:
+      - main # Triggers flow after merging to main branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Azure Login using credentials
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    # Compose App Deployment to Azure Web App for Containers (Compose)
+    - name: Build and push docker images
+      run: |
+        # In a real environment, you will push images to ACR (Azure Container Registry)
+        # docker-compose -f docker-compose.prod.yml build
+        # docker tag voting-backend \${{ secrets.ACR_LOGIN_SERVER }}/voting-backend:\${{ github.sha }}
+        # docker push \${{ secrets.ACR_LOGIN_SERVER }}/voting-backend:\${{ github.sha }}
+        echo "Building and pushing steps configured here."
+
+    - name: Deploy to Azure Web App via Compose
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'campus-voting-app' # Replace with your Azure Web App Name
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        configuration-file: docker-compose.yml 
