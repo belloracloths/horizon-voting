@@ -11,3 +11,6 @@ coverage/
 blockchain/artifacts/
 blockchain/cache/
 blockchain/typechain-types/
+
+blockchain/foundry.zip
+blockchain/foundry_bin/
