@@ -27,7 +27,7 @@ export default function AdminDashboard() {
 
   const fetchSocieties = async () => {
     try {
-      const res = await fetch("http://localhost:3001/admin/societies");
+      const res = await fetch("/api/admin/societies");
       setSocieties(await res.json());
     } catch (err) { console.error(err); }
   };
@@ -48,7 +48,7 @@ export default function AdminDashboard() {
     const payload = { name, description, image, isCommon, facultyName: isCommon ? null : facultyName };
 
     try {
-      const url = editingId ? `http://localhost:3001/admin/societies/${editingId}` : "http://localhost:3001/admin/societies";
+      const url = editingId ? `/api/admin/societies/${editingId}` : "/api/admin/societies";
       const method = editingId ? "PUT" : "POST";
       const res = await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
 
@@ -66,7 +66,7 @@ export default function AdminDashboard() {
 
   const handleDelete = async (id: number) => {
     if (confirm("Are you sure you want to delete this society?")) {
-      await fetch(`http://localhost:3001/admin/societies/${id}`, { method: "DELETE" });
+      await fetch(`/api/admin/societies/${id}`, { method: "DELETE" });
       fetchSocieties();
     }
   };

@@ -379,7 +379,7 @@ export default function VotingPage() {
   const fetchPositions = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch(`http://localhost:3001/admin/societies/${societyId}/positions`);
+      const res = await fetch(`/api/admin/societies/${societyId}/positions`);
       const data = await res.json();
       setPositions(data);
       
@@ -402,7 +402,7 @@ export default function VotingPage() {
       const userData = JSON.parse(userDataStr);
       const userId = userData.id;
 
-      const res = await fetch(`http://localhost:3001/vote/status/${userId}?societyId=${societyId}`, {
+      const res = await fetch(`/api/vote/status/${userId}?societyId=${societyId}`, {
         headers: { "Authorization": `Bearer ${token}` }
       });
 
@@ -444,7 +444,7 @@ export default function VotingPage() {
         return;
       }
 
-      const res = await fetch("http://localhost:3001/vote", {
+      const res = await fetch("/api/vote", {
         method: "POST",
         headers: { 
           "Content-Type": "application/json", 

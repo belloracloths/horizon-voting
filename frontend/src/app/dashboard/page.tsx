@@ -30,7 +30,7 @@ export default function StudentDashboard() {
   }, []);
 
   const { data: allSocieties, isLoading: isSwrLoading } = useSWR<Society[]>(
-    "http://localhost:3001/admin/societies",
+    "/api/admin/societies",
     fetcher,
     {
       revalidateOnFocus: false, 

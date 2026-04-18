@@ -35,7 +35,7 @@ export default function SignupPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3001/auth/request-signup-otp", {
+      const response = await fetch("/api/auth/request-signup-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fullName, studentId, faculty, email }),
@@ -68,7 +68,7 @@ export default function SignupPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3001/auth/verify-signup", {
+      const response = await fetch("/api/auth/verify-signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp }),

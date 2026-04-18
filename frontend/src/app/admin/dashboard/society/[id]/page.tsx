@@ -26,13 +26,13 @@ export default function ManageElection() {
   }, []);
 
   const fetchPositions = async () => {
-    const res = await fetch(`http://localhost:3001/admin/societies/${societyId}/positions`);
+    const res = await fetch(`/api/admin/societies/${societyId}/positions`);
     setPositions(await res.json());
   };
 
   const handlePosSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const url = editingPosId ? `http://localhost:3001/admin/positions/${editingPosId}` : "http://localhost:3001/admin/positions";
+    const url = editingPosId ? `/api/admin/positions/${editingPosId}` : "/api/admin/positions";
     await fetch(url, {
       method: editingPosId ? "PUT" : "POST",
       headers: { "Content-Type": "application/json" },
@@ -43,7 +43,7 @@ export default function ManageElection() {
 
   const deletePos = async (id: number) => {
     if(confirm("Are you sure you want to delete this position?")) {
-      await fetch(`http://localhost:3001/admin/positions/${id}`, { method: "DELETE" });
+      await fetch(`/api/admin/positions/${id}`, { method: "DELETE" });
       fetchPositions();
     }
   };
@@ -63,7 +63,7 @@ export default function ManageElection() {
       name: candName, batch: candBatch, faculty: candFaculty,
       description: candDesc, profilePic: candImage, positionId: Number(candPositionId)
     };
-    const url = editingCandId ? `http://localhost:3001/admin/candidates/${editingCandId}` : "http://localhost:3001/admin/candidates";
+    const url = editingCandId ? `/api/admin/candidates/${editingCandId}` : "/api/admin/candidates";
     await fetch(url, {
       method: editingCandId ? "PUT" : "POST",
       headers: { "Content-Type": "application/json" },
@@ -81,7 +81,7 @@ export default function ManageElection() {
 
   const deleteCand = async (id: number) => {
     if(confirm("Are you sure you want to delete this candidate?")) {
-      await fetch(`http://localhost:3001/admin/candidates/${id}`, { method: "DELETE" });
+      await fetch(`/api/admin/candidates/${id}`, { method: "DELETE" });
       fetchPositions();
     }
   };
