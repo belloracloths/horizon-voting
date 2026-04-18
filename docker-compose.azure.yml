@@ -24,10 +24,4 @@ services:
     environment:
       - NEXT_PUBLIC_API_URL=https://campusvotingappsea7768.azurewebsites.net
       - NEXT_PUBLIC_RPC_URL=https://campusvotingappsea7768.azurewebsites.net/rpc
-  db:
-    image: postgres:15-alpine
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: voting_db
 
