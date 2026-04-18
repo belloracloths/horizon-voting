@@ -14,51 +14,24 @@ jobs:
 
     - name: Build Docker images
       run: |
-        docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/voting-blockchain:${{ github.sha }} ./blockchain
-        docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/voting-backend:${{ github.sha }} ./backend
-        docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/voting-frontend:${{ github.sha }} ./frontend
+        docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/voting-blockchain:latest -t ${{ secrets.ACR_LOGIN_SERVER }}/voting-blockchain:${{ github.sha }} ./blockchain
+        docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/voting-backend:latest -t ${{ secrets.ACR_LOGIN_SERVER }}/voting-backend:${{ github.sha }} ./backend
+        docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/voting-frontend:latest -t ${{ secrets.ACR_LOGIN_SERVER }}/voting-frontend:${{ github.sha }} ./frontend
 
     - name: Push Docker images
       run: |
         echo "${{ secrets.ACR_PASSWORD }}" | docker login ${{ secrets.ACR_LOGIN_SERVER }} -u ${{ secrets.ACR_USERNAME }} --password-stdin
-        docker push ${{ secrets.ACR_LOGIN_SERVER }}/voting-blockchain:${{ github.sha }}
-        docker push ${{ secrets.ACR_LOGIN_SERVER }}/voting-backend:${{ github.sha }}
-        docker push ${{ secrets.ACR_LOGIN_SERVER }}/voting-frontend:${{ github.sha }}
+        docker push --all-tags ${{ secrets.ACR_LOGIN_SERVER }}/voting-blockchain
+        docker push --all-tags ${{ secrets.ACR_LOGIN_SERVER }}/voting-backend
+        docker push --all-tags ${{ secrets.ACR_LOGIN_SERVER }}/voting-frontend
 
-    - name: Prepare docker-compose.prod.yml
+    - name: Trigger Azure Web App Deployment
       run: |
-        cat <<EOF > docker-compose.prod.yml
-        version: '3.8'
-        services:
-          blockchain:
-            image: ${{ secrets.ACR_LOGIN_SERVER }}/voting-blockchain:${{ github.sha }}
-            ports:
-              - "8545:8545"
-          backend:
-            image: ${{ secrets.ACR_LOGIN_SERVER }}/voting-backend:${{ github.sha }}
-            ports:
-              - "3001:3001"
-            environment:
-              - DATABASE_URL=postgresql://user:password@db:5432/voting_db
-              - RPC_URL=http://blockchain:8545
-          frontend:
-            image: ${{ secrets.ACR_LOGIN_SERVER }}/voting-frontend:${{ github.sha }}
-            ports:
-              - "3000:3000"
-            environment:
-              - NEXT_PUBLIC_API_URL=http://localhost:3001
-              - NEXT_PUBLIC_RPC_URL=http://localhost:8545
-          db:
-            image: postgres:15-alpine
-            environment:
-              POSTGRES_USER: user
-              POSTGRES_PASSWORD: password
-              POSTGRES_DB: voting_db
-        EOF
-
-    - name: Deploy to Azure Web App via Compose
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'campusvotingappsea7768' 
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        configuration-file: docker-compose.prod.yml 
+        # Parse MSDeploy username and password from the publish profile
+        PROFILE='${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}'
+        USER=$(echo "$PROFILE" | grep -oP 'publishMethod="MSDeploy".*?userName="\K[^"]+')
+        PASS=$(echo "$PROFILE" | grep -oP 'publishMethod="MSDeploy".*?userPWD="\K[^"]+')
+        
+        # Trigger the Continuous Deployment Docker Hub webhook natively!
+        echo "Triggering Web App to pull latest images..."
+        curl -d "" -X POST -u "$USER:$PASS" https://campusvotingappsea7768.scm.azurewebsites.net/docker/hook 
