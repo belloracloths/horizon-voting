@@ -43,7 +43,7 @@ export default function AdminLogin() {
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 px-4 sm:px-0 text-center">
         <div className="flex justify-center p-4 bg-white border-4 border-[#d5cbb4] shadow-md inline-flex mx-auto mb-6">
-          <img src="https://horizoncampus.edu.lk/assets/images/logo.png" alt="Logo" className="h-16 w-auto object-contain drop-shadow-md" />
+          <img src="/vote.png" alt="Logo" className="h-16 w-auto object-contain drop-shadow-md" />
         </div>
         <h2 className="text-center text-3xl font-extrabold text-[#1a2f4c] uppercase tracking-widest">
           Admin Portal

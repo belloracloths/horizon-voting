@@ -99,7 +99,7 @@ export default function SignupPage() {
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 px-4">
         <div className="mx-auto flex justify-center mb-2">
           {/* Logo unchanged as requested */}
-          <img src="https://horizoncampus.edu.lk/assets/images/logo.png" alt="Horizon Campus Logo" className="h-24 w-auto object-contain drop-shadow-xl" />
+          <img src="/vote.png" alt="Horizon Campus Logo" className="h-24 w-auto object-contain drop-shadow-xl" />
         </div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-[#1a2f4c] uppercase tracking-widest">Register to Vote</h2>
         <p className="mt-2 text-center text-sm font-bold text-[#8b2635] uppercase tracking-widest">Create your secure student voting account</p>

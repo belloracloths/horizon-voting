@@ -99,10 +99,10 @@ export default function LoginPage() {
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10 px-4 sm:px-0">
         
-        {/* මෙතන තමයි Logo එක හරියටම මැදට එන්න වෙනස් කළේ */}
+        
         <div className="flex justify-center w-full mb-6">
           <div className="p-4 bg-white border-4 border-[#d5cbb4] shadow-md inline-block">
-            <img src="https://horizoncampus.edu.lk/assets/images/logo.png" alt="Logo" className="h-16 w-auto object-contain drop-shadow-md" />
+            <img src="/vote.png" alt="Logo" className="h-16 w-auto object-contain drop-shadow-md" />
           </div>
         </div>
         

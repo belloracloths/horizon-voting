@@ -58,7 +58,7 @@ export default function StudentDashboard() {
             
             {/* Logo/Brand */}
             <div className="flex items-center gap-3">
-              <img src="https://horizoncampus.edu.lk/assets/images/logo.png" alt="Logo" className="h-10 w-auto object-contain" />
+              <img src="/vote.png" alt="Logo" className="h-10 w-auto object-contain" />
               <h1 className="text-xl font-extrabold text-[#1a2f4c] uppercase tracking-widest hidden sm:block">Student Portal</h1>
               
               {/* Mobile User Info directly beside the logo */}
