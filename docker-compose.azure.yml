@@ -2,11 +2,21 @@
 services:
   blockchain:
     image: campusvotingacrsea7768.azurecr.io/voting-blockchain:latest
+    volumes:
+      - /home/ganache_data:/app/ganache_data
+      - /home/ignition:/app/ignition/deployments
   backend:
     image: campusvotingacrsea7768.azurecr.io/voting-backend:latest
     environment:
-      - DATABASE_URL=postgresql://user:password@db:5432/voting_db
+      - DATABASE_URL=postgresql://neondb_owner:npg_HAY0ng3QbyIz@ep-shy-boat-anx9tggz-pooler.c-6.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require&pgbouncer=true&connection_limit=5
       - RPC_URL=http://blockchain:8545
+      - EMAIL_USER=belloracloths@gmail.com
+      - EMAIL_PASS=blfp htrg udqu xeuk
+      - JWT_SECRET=horizon_campus_super_secret_key_2026
+      - ENCRYPTION_KEY=MySuperSecretKeyForVotingApp123!
+      - ADMIN_PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
+      - VOTING_ADDRESS=0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+      - FORWARDER_ADDRESS=0x5FbDB2315678afecb367f032d93F642f64180aa3
   frontend:
     image: campusvotingacrsea7768.azurecr.io/voting-frontend:latest
     ports:

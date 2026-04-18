@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "node:local": "npx hardhat node",
-    "node:ganache": "ganache --chain.chainId 31337 --database.dbPath ./ganache_data --port 8545 --wallet.mnemonic \"test test test test test test test test test test test junk\"",
+    "node:ganache": "ganache --server.host 0.0.0.0 --chain.chainId 31337 --database.dbPath ./ganache_data --port 8545 --wallet.mnemonic \"test test test test test test test test test test test junk\"",
     "node:anvil": "anvil --state anvil_state.json --chain-id 31337",
     "deploy:local": "npx hardhat ignition deploy ignition/modules/Voting.ts --network localhost"
   },
