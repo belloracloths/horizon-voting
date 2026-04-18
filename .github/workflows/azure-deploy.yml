@@ -13,10 +13,10 @@ jobs:
       uses: actions/checkout@v3
 
     # Azure Login using credentials
-    - name: Azure Login
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    # - name: Azure Login
+    #   uses: azure/login@v1
+    #   with:
+    #     creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     # Compose App Deployment to Azure Web App for Containers (Compose)
     - name: Build and push docker images
