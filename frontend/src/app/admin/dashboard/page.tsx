@@ -90,9 +90,7 @@ export default function AdminDashboard() {
       <header className="bg-white border-b-4 border-[#d5cbb4] sticky top-0 z-50 shadow-lg relative">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 border-2 border-[#1a2f4c] bg-[#1a2f4c] flex items-center justify-center shadow-md">
-              <span className="text-white font-bold text-xl uppercase font-serif">V</span>
-            </div>
+            <img src="https://horizoncampus.edu.lk/assets/images/logo.png" alt="Logo" className="h-10 w-auto object-contain" />
             <div>
               <h1 className="text-xl font-extrabold tracking-widest text-[#1a2f4c] uppercase">Admin Portal</h1>
               <p className="text-[10px] font-bold text-[#8b2635] uppercase tracking-widest">Society Management</p>
