@@ -1,5 +1,8 @@
 import type { NextConfig } from "next";
 
+const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:3001";
+const RPC_URL = process.env.RPC_URL || "http://127.0.0.1:8545";
+
 const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
@@ -7,15 +10,15 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'http://backend:3001/:path*', // Proxy to Backend
+        destination: `${BACKEND_URL}/:path*`, // Proxy to Backend
       },
       {
         source: '/rpc',
-        destination: 'http://blockchain:8545', // Proxy to Blockchain Node
+        destination: `${RPC_URL}`, // Proxy to Blockchain Node
       },
       {
         source: '/rpc/:path*',
-        destination: 'http://blockchain:8545/:path*', // Proxy to Blockchain Node
+        destination: `${RPC_URL}/:path*`, // Proxy to Blockchain Node
       }
     ]
   }

@@ -20,6 +20,8 @@ export default function ManageElection() {
   const [candDesc, setCandDesc] = useState("");
   const [candImage, setCandImage] = useState(""); 
 
+  const [selectedPositionForResults, setSelectedPositionForResults] = useState<any>(null);
+
   useEffect(() => { 
     if (!localStorage.getItem("admin_token")) router.push("/admin/login");
     else fetchPositions(); 
@@ -196,7 +198,10 @@ export default function ManageElection() {
                     <h3 className="text-2xl font-bold text-[#2c3e50] uppercase">{pos.name}</h3>
                     {pos.resultTime && <span className="text-xs text-[#c0392b] font-bold block mt-1">Results at: {new Date(pos.resultTime).toLocaleString()}</span>}
                   </div>
-                  <div className="flex gap-3 mb-1">
+                  <div className="flex gap-4 items-center mb-1">
+                    <button onClick={() => setSelectedPositionForResults(pos)} className="text-xs font-bold uppercase bg-[#c0392b] text-white px-3 py-1 border border-[#922b21] hover:bg-[#922b21] transition shadow-sm rounded-sm">
+                      View Result
+                    </button>
                     <button onClick={() => { 
                       setEditingPosId(pos.id); 
                       setPosName(pos.name); 
@@ -244,6 +249,73 @@ export default function ManageElection() {
           )}
         </div>
       </div>
+
+      {selectedPositionForResults && (
+        <div className="fixed inset-0 bg-[#1a2f4cc0] z-50 flex items-center justify-center p-4 backdrop-blur-sm transition-all">
+          <div className="bg-[#fbf9f4] w-full max-w-2xl max-h-[85vh] overflow-y-auto border-4 border-double border-[#d5cbb4] shadow-2xl relative flex flex-col">
+            
+            <div className="bg-[#2c3e50] text-[#ecf0f1] p-4 sticky top-0 z-10 border-b-4 border-[#c0392b] flex justify-between items-center shadow-md">
+              <div>
+                <h3 className="text-xl font-bold uppercase tracking-widest">{selectedPositionForResults.name}</h3>
+                <p className="text-xs text-[#bdc3c7] uppercase font-bold tracking-wider mt-1">Live Voting Standings</p>
+              </div>
+              <button 
+                onClick={() => setSelectedPositionForResults(null)}
+                className="text-white hover:text-[#e74c3c] text-3xl font-bold px-3 py-1 leading-none transition"
+              >
+                &times;
+              </button>
+            </div>
+            
+            <div className="p-6 space-y-4 flex-1">
+              {[...selectedPositionForResults.candidates].sort((a, b) => (b.voteCount || 0) - (a.voteCount || 0)).map((cand: any, index: number) => (
+                <div key={cand.id} className={`flex items-center gap-4 p-4 border-2 ${index === 0 ? 'bg-[#f4fce8] border-[#27ae60] shadow-md transform scale-[1.02]' : 'bg-white border-[#d5cbb4]'} transition-all`}>
+                  
+                  <div className={`w-10 h-10 flex items-center justify-center font-bold text-xl shrink-0 ${index === 0 ? 'bg-[#27ae60] text-white rounded-sm shadow-sm' : 'bg-[#ece8dc] text-[#7f8c8d] border border-[#d5cbb4] rounded-sm'}`}>
+                    #{index + 1}
+                  </div>
+                  
+                  {cand.profilePic ? (
+                    <img src={cand.profilePic} className="w-16 h-16 object-cover border-2 border-[#2c3e50] shrink-0 p-0.5 bg-white" />
+                  ) : (
+                    <div className="w-16 h-16 bg-[#eae6d8] border-2 border-[#2c3e50] flex items-center justify-center shrink-0">
+                      <span className="text-[10px] uppercase text-[#888] font-bold text-center">No Photo</span>
+                    </div>
+                  )}
+                  
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-bold text-[#2c3e50] text-lg uppercase tracking-wide truncate">{cand.name}</h4>
+                    <p className="text-[11px] font-bold text-[#7f8c8d] uppercase tracking-wider truncate mt-1">
+                      {cand.faculty} <span className="opacity-50 mx-1">|</span> BATCH {cand.batch}
+                    </p>
+                  </div>
+                  
+                  <div className="text-right shrink-0 border-l-2 border-[#d5cbb4] pl-4">
+                    <span className={`block text-3xl font-extrabold ${index === 0 ? 'text-[#27ae60]' : 'text-[#c0392b]'} tabular-nums leading-none`}>
+                      {cand.voteCount || 0}
+                    </span>
+                    <span className="text-[10px] font-bold text-[#7f8c8d] uppercase tracking-widest mt-1 block">Votes</span>
+                  </div>
+                </div>
+              ))}
+              
+              {selectedPositionForResults.candidates.length === 0 && (
+                <div className="text-center py-10 bg-white border-2 border-dashed border-[#d5cbb4]">
+                  <span className="text-sm font-bold uppercase tracking-widest text-[#7f8c8d]">No candidates available</span>
+                </div>
+              )}
+            </div>
+            
+            <div className="bg-[#ece8dc] p-4 text-center border-t-4 border-[#2c3e50] mt-auto">
+               <button onClick={() => setSelectedPositionForResults(null)} className="px-8 py-3 bg-[#2c3e50] text-white font-bold uppercase tracking-widest border-2 border-[#2c3e50] hover:bg-white hover:text-[#2c3e50] transition shadow-md">
+                 Close View
+               </button>
+            </div>
+            
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
