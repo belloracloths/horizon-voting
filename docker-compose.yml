@@ -34,6 +34,8 @@ services:
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:3001
       - NEXT_PUBLIC_RPC_URL=http://localhost:8545
+      - BACKEND_URL=http://backend:3001
+      - RPC_URL=http://blockchain:8545
     depends_on:
       - backend
     networks:

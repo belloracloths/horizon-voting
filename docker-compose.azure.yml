@@ -24,4 +24,6 @@ services:
     environment:
       - NEXT_PUBLIC_API_URL=https://campusvotingappsea7768.azurewebsites.net
       - NEXT_PUBLIC_RPC_URL=https://campusvotingappsea7768.azurewebsites.net/rpc
+      - BACKEND_URL=http://backend:3001
+      - RPC_URL=http://blockchain:8545
 
