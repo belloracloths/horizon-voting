@@ -5,6 +5,8 @@ COPY package*.json ./
 RUN npm install
 # Copy source and build
 COPY . .
+ENV BACKEND_URL=http://backend:3001
+ENV RPC_URL=http://blockchain:8545
 RUN npm run build
 
 FROM node:20-alpine
