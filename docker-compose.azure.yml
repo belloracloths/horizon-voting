@@ -3,8 +3,8 @@ services:
   blockchain:
     image: campusvotingacrsea7768.azurecr.io/voting-blockchain:latest
     volumes:
-      - /home/ganache_data:/app/ganache_data
-      - /home/ignition:/app/ignition/deployments
+      - ${WEBAPP_STORAGE_HOME}/ganache_data:/app/ganache_data
+      - ${WEBAPP_STORAGE_HOME}/site/wwwroot/ignition:/app/ignition/deployments
   backend:
     image: campusvotingacrsea7768.azurecr.io/voting-backend:latest
     environment:
