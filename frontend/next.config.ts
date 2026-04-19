@@ -1,12 +1,12 @@
 import type { NextConfig } from "next";
 
-const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:3001";
-const RPC_URL = process.env.RPC_URL || "http://127.0.0.1:8545";
-
 const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
   async rewrites() {
+    const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:3001";
+    const RPC_URL = process.env.RPC_URL || "http://127.0.0.1:8545";
+
     return [
       {
         source: '/api/:path*',
