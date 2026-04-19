@@ -4,6 +4,8 @@ import { Cache } from 'cache-manager';
 import { PrismaService } from '../prisma.service';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
+import { ethers } from 'ethers';
+import * as VotingABI from '../vote/Voting.json';
 
 @Injectable()
 export class AdminService {
@@ -59,10 +61,35 @@ export class AdminService {
   }
 
   async getPositions(societyId: number) {
-    return this.prisma.position.findMany({
+    const positions = await this.prisma.position.findMany({
       where: { societyId },
       include: { candidates: true } 
     });
+
+    try {
+      const rpcUrl = process.env.RPC_URL;
+      const votingAddress = process.env.VOTING_ADDRESS;
+
+      if (rpcUrl && votingAddress) {
+        const provider = new ethers.JsonRpcProvider(rpcUrl);
+        const votingContract = new ethers.Contract(votingAddress, VotingABI.abi, provider);
+
+        await Promise.all(
+          positions.map(async (pos) => {
+            await Promise.all(
+              pos.candidates.map(async (cand) => {
+                const votes = await votingContract.candidateVotes(cand.id);
+                cand.voteCount = Number(votes);
+              })
+            );
+          })
+        );
+      }
+    } catch (error) {
+      console.error("Failed to fetch accurate vote counts from smart contract:", error);
+    }
+
+    return positions;
   }
 
   async updatePosition(id: number, data: any) {
