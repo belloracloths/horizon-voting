@@ -20,6 +20,10 @@ const config: HardhatUserConfig = {
       url: "http://127.0.0.1:7545",
       chainId: 1337
     },
+    azure: {
+      url: "https://campusvotingappsea7768.azurewebsites.net/rpc",
+      chainId: 31337
+    },
   },
 };
 
