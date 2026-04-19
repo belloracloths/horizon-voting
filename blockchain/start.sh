@@ -1,4 +1,8 @@
 #!/bin/sh
+echo "Clearing old local chain state to ensure deterministic contract addresses..."
+rm -rf /app/ganache_data/*
+rm -rf /app/ignition/deployments/chain-31337
+
 echo "Creating necessary directories for persistent storage..."
 mkdir -p /app/ganache_data
 mkdir -p /app/ignition/deployments
